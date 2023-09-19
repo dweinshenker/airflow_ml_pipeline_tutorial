@@ -1,5 +1,5 @@
 import sys
-sys.path.append("../ml_pipeline")
+sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
 
 import torch
 import random

@@ -5,12 +5,14 @@
 # Prequisites
 # Install Airflow => https://airflow.apache.org/docs/apache-airflow/stable/start.html
 
-from datetime import timedelta
+import sys
+import os
+sys.path.insert(0,os.path.abspath(os.path.dirname(__file__)))
 
+from datetime import timedelta
 from airflow.models import DAG
 from airflow.utils.dates import days_ago
 from airflow.operators.bash_operator import BashOperator
-
 
 # Define DAG parameters
 # Include overrides for defaults in `default_args`
