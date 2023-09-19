@@ -4,7 +4,7 @@ sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
 import torch
 import utils.s3_storage
 from utils.device import device
-from neural_network import NeuralNetwork
+from utils.neural_network import NeuralNetwork
 from datetime import datetime
 from torch import nn
 from torch.utils.data import DataLoader
@@ -15,7 +15,7 @@ print(f"Using {device} device")
 def train():
     # Get the data from S3
     todays_date = datetime.today().strftime('%Y-%m-%d')
-    training_data_buffer = s3_storage.download_from_s3(f'training_data_{todays_date}')
+    training_data_buffer = utils.s3_storage.download_from_s3(f'training_data_{todays_date}')
     training_data = torch.load(training_data_buffer)
 
     # Utilize a data loader to iterate over datasets
@@ -61,7 +61,7 @@ def train():
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
     # Upload model to s3
-    s3_storage.upload_to_s3(model, f'model_{todays_date}')
+    utils.s3_storage.upload_to_s3(model, f'model_{todays_date}')
 
 # Call train function
 train()
