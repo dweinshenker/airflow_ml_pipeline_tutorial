@@ -4,10 +4,9 @@
 
 import sys
 sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
-print(sys.path)
 
 import torch
-from utils.s3_storage import *
+import utils.s3_storage
 from datetime import datetime
 from matplotlib import pyplot
 from torch.utils.data import DataLoader # enables iterable access to input samples
@@ -64,8 +63,8 @@ def load():
 
     # upload data into s3 bucket
     todays_date = datetime.today().strftime('%Y-%m-%d')
-    upload_to_s3(training_data, f'training_data_{todays_date}')
-    upload_to_s3(test_data, f'test_data_{todays_date}')
+    utils.s3_storage.upload_to_s3(training_data, f'training_data_{todays_date}')
+    utils.s3_storage.upload_to_s3(test_data, f'test_data_{todays_date}')
     print("uploaded training + test data to S3")
 
 # Call load function

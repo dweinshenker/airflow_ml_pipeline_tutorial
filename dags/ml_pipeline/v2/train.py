@@ -2,9 +2,9 @@ import sys
 sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
 
 import torch
-import s3_storage
+import utils.s3_storage
+from utils.device import device
 from neural_network import NeuralNetwork
-from device import device
 from datetime import datetime
 from torch import nn
 from torch.utils.data import DataLoader

@@ -3,10 +3,10 @@ sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
 
 import torch
 import random
-import s3_storage
-import metrics
-from image_classes import classes
-from device import device
+import utils.s3_storage
+import utils.metrics
+from utils.image_classes import classes
+from utils.device import device
 from datetime import datetime
 from matplotlib import pyplot
 from torch import nn
@@ -18,11 +18,11 @@ print(f"Using {device} device")
 def test():
     # Get the data from S3
     todays_date = datetime.today().strftime('%Y-%m-%d')
-    test_data_buffer = s3_storage.download_from_s3(f'test_data_{todays_date}')
+    test_data_buffer = utils.s3_storage.download_from_s3(f'test_data_{todays_date}')
     test_data = torch.load(test_data_buffer)
 
     # Get the model from S3
-    model = s3_storage.download_from_s3(f'model_{todays_date}')
+    model = utils.s3_storage.download_from_s3(f'model_{todays_date}')
 
     # Load model
     model = torch.load(model)
@@ -53,7 +53,7 @@ def test():
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
     # instrument accuracy metric to be exported
-    metrics.generate_ml_metrics(100*correct)
+    utils.metrics.generate_ml_metrics(100*correct)
 
     # look at some of the predictions
     for idx in range(9):
