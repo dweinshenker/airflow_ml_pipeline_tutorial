@@ -1,7 +1,3 @@
-# Prequisites
-# Install Python
-# Install Pytorch => https://pytorch.org/get-started/locally/
-
 import sys
 sys.path.append("/Users/weins/airflow/dags/ml_pipeline")
 

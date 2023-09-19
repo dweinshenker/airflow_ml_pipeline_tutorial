@@ -78,9 +78,53 @@ In addition to printing the accuracy metrics, this stage instruments the accurac
 
 We will stitch together the steps of our pipeline into a DAG (directed ascyclic graph) using Airflow. Airflow will run the steps either synchronously or in parallel (based on the dependency flow we describe).
 
-#### Observability
+### Observability
 
-We will instrument/collect metrics from our Airflow pipeline via Prometheus so that we can inspect how our model and pipeline is performing on each training run.
+We will instrument/collect metrics from our Airflow pipeline via Prometheus so that we can inspect how our model and pipeline is performing on each training run. These metrics are sent to StatsD, are network daemon that runs in the background and listens for various instrumented metrics. StatsD will forward the metrics to a metrics exporter (statsd-exporter), which will be scraped by Prometheus to collect the metrics on a consistent interval.
+
+### Setup
+
+#### 1) Airflow installation
+
+**Docker Containers**
+
+Airflow can be [run](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html) as a set of Docker containers. These containers are:
+
+- airflow-scheduler: monitors tasks and DAGs, triggers tasks once dependencies are complete
+- airflow-webserver: lists DAGs, runs, history, other important data
+- airflow-worker: executes tasks given by the scheduler
+- airflow-triggerer: runs an event loop for deferrable tasks
+- airflow-init: initialization service
+- postgres: the PostgreSQL database
+- redis: redis broker that passes messages from the scheduler to workers
+
+- Fetch Docker compose file
+    - `curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.7.1/docker-compose.yaml'`
+- Initalize the database
+    - `docker compose up airflow-init`
+- Build dependencies
+    - `docker compose build`
+- Run Airflow
+    - `docker compose up`
+
+Additional dependencies (Pytorch, etc.) are managed by `requirements.txt`, which specifies in the `x-airflow-common` container the common dependencies to be installed.
+
+#### 2) Enable StatsD metrics
+
+In `airflow.cfg`, set `statsd_on` to `True`.
+
+```
+# Enables sending metrics to StatsD.
+statsd_on = True
+statsd_host = localhost
+statsd_port = 8125
+statsd_prefix = airflow
+```
+
+#### 3) Start Airflow
+
+Run `airflow webserver`, navigate to `localhost:8080` in the browser.
+Run `airflow scheduler`.
 
 ### Alternatives
 
