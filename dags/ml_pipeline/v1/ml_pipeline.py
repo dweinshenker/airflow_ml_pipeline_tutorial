@@ -13,6 +13,10 @@ from torchvision.transforms import ToTensor
 from device import device
 from neural_network import NeuralNetwork
 
+#######################################
+############### Load ##################
+#######################################
+
 # Get training data from open datasets
 # This downloads the raw data into a the directory /data/FashionMNIST/raw
 # Performs a transformation on 28x28 images to Tensors
@@ -60,6 +64,10 @@ for i in range(9):
 # show the figure
 pyplot.show()
 
+#######################################
+############### Train #################
+#######################################
+
 # Get cpu, gpu or mps device for training.
 print(f"Using {device} device")
 
@@ -104,6 +112,10 @@ for t in range(epochs):
 
         loss, current = loss.item(), (batch + 1) * len(X)
         print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+
+#######################################
+############### Test ##################
+#######################################
 
 # Load test data into DataLoader
 test_dl = DataLoader(test_data, batch_size=batch_size)
