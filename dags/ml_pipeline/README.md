@@ -123,8 +123,32 @@ statsd_prefix = airflow
 
 #### 3) Start Airflow
 
-Run `airflow webserver`, navigate to `localhost:8080` in the browser.
-Run `airflow scheduler`.
+Run `airflow scheduler`, navigate to `localhost:8080` in the browser.
+
+If running the containers via docker compose, run `docker compose up` under the same directory where the `docker-compose.yaml` file exists.
+
+#### 4) Start Prometheus
+
+Run Prometheus as a docker container:
+
+```
+docker run \
+    -p 9090:9090 \
+    -v /<path_to_airflow_dir>/airflow/dags/ml_pipeline/v2/prometheus.yml:/etc/prometheus/prometheus.yml \
+    -v prometheus-data:/prometheus \
+    prom/prometheus
+```
+Confirm Prometheus is running by navigating to `http://localhost:9090`
+
+#### 5) Start StatsD Exporter
+
+Run StatsD-Exporter as a docker container:
+
+```
+docker run -p 9102:9102 -p 9125:9125 -p 9125:9125/udp \ 
+        -v /<path_to_airflow_dir>/airflow/dags/ml_pipeline/v2/statsd.yml:/tmp/statsd_mapping.yml \ 
+        prom/statsd-exporter --statsd.mapping-config=/tmp/statsd_mapping.yml
+```
 
 ### Alternatives
 

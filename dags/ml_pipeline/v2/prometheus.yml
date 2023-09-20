@@ -10,4 +10,4 @@ scrape_configs:
     scrape_interval: 10s
 
     static_configs:
-      - targets: ['host.docker.internal:9123'] #  statsd-exporter running in docker container on host
+      - targets: ['host.docker.internal:9102'] #  statsd-exporter running in docker container on host

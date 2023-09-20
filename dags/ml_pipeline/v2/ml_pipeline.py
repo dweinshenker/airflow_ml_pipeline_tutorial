@@ -22,7 +22,7 @@ with DAG(
     default_args={
         'start_date': days_ago(2),
     },
-    schedule_interval='0 0 * * *',
+    schedule_interval='* * * * *',
     dagrun_timeout=timedelta(minutes=60)
 ) as dag:
     # we are breaking our load, train, and test steps into tasks
